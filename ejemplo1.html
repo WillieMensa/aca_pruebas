@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>ejemplos de mobiforge</title>
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <!-- https://mobiforge.com/design-development/html5-pointer-events-api-combining-touch-mouse-and-pen -->
+
+    <style>
+      /* Disable intrinsic user agent touch behaviors (such as panning or zooming) */
+      canvas {
+        touch-action: none;
+      }
+    </style>
+
+    <script type='text/javascript'>
+
+    function init() {
+      var canvas = document.getElementById("mycanvas"),
+      context = canvas.getContext("2d");
+      //  var offset  = getOffset(canvas);
+      if(window.PointerEvent) {
+        canvas.addEventListener("pointerdown", pointerHandler, false);
+      }
+      else {
+        //Provide fallback for user agents that do not support Pointer Events
+        canvas.addEventListener("mousedown", pointerHandler, false);
+      }
+    }
+
+
+      function pointerHandler(event) {
+        // Get a reference to our coordinates div
+        var coords = document.getElementById("coords");
+        // Write the coordinates of the pointer to the div
+        coords.innerHTML = 'x: ' + event.pageX + ', y: ' + event.pageY;
+      }
+
+
+       //Helper function to get correct page offset for the Pointer coords
+      function getOffset(obj) {
+        var offsetLeft = 0;
+        var offsetTop = 0;
+        do {
+         if (!isNaN(obj.offsetLeft)) {
+             offsetLeft += obj.offsetLeft;
+         }
+         if (!isNaN(obj.offsetTop)) {
+             offsetTop += obj.offsetTop;
+         }
+        } while(obj = obj.offsetParent );
+        return {left: offsetLeft, top: offsetTop};
+      }
+
+    </script>
+
+  </head>
+  <body onload="init()">
+
+    <canvas id="mycanvas" width="500" height="500" style="border:1px solid black;"></canvas>
+
+    <div id="coords">COORDS<br></div>
+
+  </body>
+</html>

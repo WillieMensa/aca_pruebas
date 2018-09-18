@@ -1,0 +1,7 @@
+      <style>
+        /* Disable intrinsic user agent touch behaviors (such as panning or zooming) */
+        canvas {
+          touch-action: none;
+        }
+      </style>
+ 

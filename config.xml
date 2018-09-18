@@ -19,10 +19,7 @@
 
     <platform name="android">
         <allow-intent href="market:*" />
-		<icon   src="pgs/res/games_controller_white_100.png" />
-		<icon   src="google-logo-white.png" />
-		<icon   src="Roboto-Light.ttf" />
-		<icon   src="Roboto-Regular.ttf" />
+		<icon   src="phaser-logo.png" />
     </platform>
 
 </widget>

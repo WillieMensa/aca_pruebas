@@ -3,76 +3,74 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Ejemplo 2 - Idea de mobiforge</title>
+    <title>Prueba 3 - Idea de mobiforge</title>
     <link href="index.css" rel="stylesheet" type="text/css" />
 
-    <style>
-      /* Disable intrinsic user agent touch behaviors (such as panning or zooming) */
-      canvas {
-        touch-action: none;
-      }
-    </style>
+  	<style>
+  	  /* Disable intrinsic user agent touch behaviors (such as panning or zooming) */
+  	  canvas {
+  		touch-action: none;
+  	  }
+  	</style>
+
 
     <script type='text/javascript'>
+      var lastPt = null;
+      var canvas;
+      var ctx;
 
-    function init() {
-      var canvas = document.getElementById("mycanvas"),
-      context = canvas.getContext("2d");
-      //  var offset  = getOffset(canvas);
-      if(window.PointerEvent) {
-        //  canvas.addEventListener("pointerdown", pointerHandler, false);
-        canvas.addEventListener("pointerdown", draw, false);
+      function init() {
+        canvas = document.getElementById("mycanvas");
+        ctx = canvas.getContext("2d");
+        var offset  = getOffset(canvas);
+        if(window.PointerEvent) {
+          canvas.addEventListener("pointerdown", function() {
+            canvas.addEventListener("pointermove", draw, false);
+          }
+          , false);
+          canvas.addEventListener("pointerup", endPointer, false);
+        }
+        else {
+          //Provide fallback for user agents that do not support Pointer Events
+          canvas.addEventListener("mousedown", function() {
+            canvas.addEventListener("mousemove", draw, false);
+          }
+          , false);
+          canvas.addEventListener("mouseup", endPointer, false);
+        }
       }
-      else {
-        //Provide fallback for user agents that do not support Pointer Events
-        //  canvas.addEventListener("mousedown", pointerHandler, false);
-        canvas.addEventListener("mousedown", draw, false);
+
+      // Event handler called for each pointerdown event:
+      function draw(e) {
+        if(lastPt!=null) {
+          ctx.beginPath();
+          // Start at previous point
+          ctx.moveTo(lastPt.x, lastPt.y);
+          // Line to latest point
+          ctx.lineTo(e.pageX, e.pageY);
+          // Draw it!
+          ctx.stroke();
+        }
+        //Store latest pointer
+        lastPt = {x:e.pageX, y:e.pageY};
       }
-    }
 
-    // Event handler called for each pointerdown event:
-    function draw(event) {
-      var canvas = document.getElementById("mycanvas"),
-      context = canvas.getContext("2d");
-      var offset  = getOffset(canvas);
-      var coords = document.getElementById("coords");
-
-      console.log('event.pageX, event.pageY: ' + event.pageX + ' , ' + event.pageY );
-      console.log('offset: ' + offset.left + ' , ' + offset.top );
-      context.fillRect(event.pageX-offset.left, event.pageY-offset.top, 5, 5);
-
-      // Write the coordinates of the pointer to the div
-      coords.innerHTML = 'x: ' + event.pageX + ', y: ' + event.pageY;
-
-    }
-
-       //Helper function to get correct page offset for the Pointer coords
       function getOffset(obj) {
-        var offsetLeft = 0;
-        var offsetTop = 0;
-        do {
-         if (!isNaN(obj.offsetLeft)) {
-             offsetLeft += obj.offsetLeft;
-         }
-         if (!isNaN(obj.offsetTop)) {
-             offsetTop += obj.offsetTop;
-         }
-        } while(obj = obj.offsetParent );
-        return {left: offsetLeft, top: offsetTop};
+        //...
+      }
+
+      function endPointer(e) {
+        //Stop tracking the pointermove (and mousemove) events
+        canvas.removeEventListener("pointermove", draw, false);
+        canvas.removeEventListener("mousemove", draw, false);
+
+        //Set last point to null to end our pointer path
+        lastPt = null;
       }
 
     </script>
-
   </head>
-
-
   <body onload="init()">
-    <p>Muestra posicion del puntero accionado en el canvas
-    </p>
-
-    <canvas id="mycanvas" width="500" height="500" style="border:2px solid black;"></canvas>
-
-    <div id="coords">COORDS<br></div>
-
+    <canvas id="mycanvas" width="500" height="500" style="border:2px solid green;"></canvas>
   </body>
 </html>
